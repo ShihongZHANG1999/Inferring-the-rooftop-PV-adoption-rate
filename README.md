@@ -29,6 +29,7 @@ For method 2, we firstly convert predition results (raster format) to polygon fe
 **Predict.py** -- Use the checkpoints trained from SegFormer to extract pv panels from satellite images
 
 input_dir = path to satellite images
+
 output_dir = path to prediction results
 
 **Intersect.py** -- Convert pv masks to pv polygons, get the pv roofs by intersecting the pv polygons and the building footprints.
