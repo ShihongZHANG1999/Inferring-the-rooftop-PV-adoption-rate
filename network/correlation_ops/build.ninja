@@ -1,0 +1,31 @@
+ninja_required_version = 1.3
+cxx = c++
+nvcc = /usr/local/cuda-11.7/bin/nvcc
+
+cflags = -DTORCH_EXTENSION_NAME=correlation -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /home/jingyipan/miniconda3/envs/night/lib/python3.9/site-packages/torch/include -isystem /home/jingyipan/miniconda3/envs/night/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /home/jingyipan/miniconda3/envs/night/lib/python3.9/site-packages/torch/include/TH -isystem /home/jingyipan/miniconda3/envs/night/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda-11.7/include -isystem /home/jingyipan/miniconda3/envs/night/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -std=c++14 -fopenmp
+post_cflags = 
+cuda_cflags = -DTORCH_EXTENSION_NAME=correlation -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /home/jingyipan/miniconda3/envs/night/lib/python3.9/site-packages/torch/include -isystem /home/jingyipan/miniconda3/envs/night/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /home/jingyipan/miniconda3/envs/night/lib/python3.9/site-packages/torch/include/TH -isystem /home/jingyipan/miniconda3/envs/night/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda-11.7/include -isystem /home/jingyipan/miniconda3/envs/night/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_86,code=compute_86 -gencode=arch=compute_86,code=sm_86 --compiler-options '-fPIC' -std=c++14
+cuda_post_cflags = 
+ldflags = -shared -lgomp -L/home/jingyipan/miniconda3/envs/night/lib/python3.9/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda_cu -ltorch_cuda_cpp -ltorch -ltorch_python -L/usr/local/cuda-11.7/lib64 -lcudart
+
+rule compile
+  command = $cxx -MMD -MF $out.d $cflags -c $in -o $out $post_cflags
+  depfile = $out.d
+  deps = gcc
+
+rule cuda_compile
+  depfile = $out.d
+  deps = gcc
+  command = $nvcc  $cuda_cflags -c $in -o $out $cuda_post_cflags
+
+rule link
+  command = $cxx $in $ldflags -o $out
+
+build correlation.o: compile /home/jingyipan/DANNet-main/network/correlation_ops/correlation.cpp
+build correlation_sampler.o: compile /home/jingyipan/DANNet-main/network/correlation_ops/correlation_sampler.cpp
+build correlation_cuda_kernel.cuda.o: cuda_compile /home/jingyipan/DANNet-main/network/correlation_ops/correlation_cuda_kernel.cu
+
+build correlation.so: link correlation.o correlation_sampler.o correlation_cuda_kernel.cuda.o
+
+default correlation.so
+
