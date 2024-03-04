@@ -6,7 +6,7 @@ Increasing renewable energy generation is a pivotal approach for attenuating the
 
 ## Workflow
 
-![image]()
+![image](images/flowchart.jpg)
 
 The workflow can be devided into 3 steps: rooftop pv extraction, PV adoption rate calculation and power generation estimation. This repository mainly shows the two methods:
 
@@ -17,12 +17,13 @@ The workflow can be devided into 3 steps: rooftop pv extraction, PV adoption rat
 
 For method 1, we utilize a transformer-based segmentation model known as SegFormer. This model has demonstrated remarkable efficacy across various computer vision applications. It comprises an encoder with multi-stage transformer blocks and an all-MLP decoder that integrates multi-level features from the encoder and generates binary predictions indicating the presence or absence of PV.
 
-![]()
+![image](images/model.jpg)
 
 For method 2, we firstly convert predition results (raster format) to polygon features (vector format) and then use GIS spatial analysis operation--Intersect, to identify the rooftops with pv panels.
 
-![]()
-![]()
+![image](images/buildings.jpg)
+
+![image](images/buildings_with_pv.jpg)
 
 ## Usage
 
