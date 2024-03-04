@@ -22,8 +22,7 @@ For method 1, we utilize a transformer-based segmentation model known as SegForm
 For method 2, we firstly convert predition results (raster format) to polygon features (vector format) and then use GIS spatial analysis operation--Intersect, to identify the rooftops with pv panels.
 
 ![image](images/buildings.jpg)
-
-![image](images/buildings_with_pv.jpg)
+![image](images/buildingswithpv.jpg)
 
 ## Usage
 
