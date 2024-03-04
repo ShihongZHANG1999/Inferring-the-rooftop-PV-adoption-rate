@@ -1,0 +1,8 @@
+geopandas
+matplotlib
+pillow
+tqdm
+pytorch
+torchvision
+cudatoolkit 
+opencv-python
